@@ -5,8 +5,10 @@ var userDao = require('../dao/userDao');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  console.log(req.query.userid);
+  res.redirect('../plan/index.html');
 });
+
 
 // 增加用户
 //TODO 同时支持get,post
