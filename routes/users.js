@@ -32,4 +32,17 @@ router.post('/updateUser', function(req, res, next) {
   userDao.update(req, res, next);
 });
 
+router.post('/postCommand', function(req, res, next) {
+  //userDao.update(req, res, next);
+  console.log('postCommand:' + JSON.stringify(req.body));
+  if(req.body.command == "getallplangroup"){
+    console.log('getallplangroup');
+    userDao.queryAll(req, res, next);
+  }else if(req.body.command == "getallplan"){
+    console.log('getallplan');
+    userDao.queryAll(req, res, next);
+  }
+});
+
+
 module.exports = router;

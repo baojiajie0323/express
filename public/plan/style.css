@@ -1,5 +1,17 @@
+body{
+  overflow: hidden;
+}
+
 .ant-tabs{
   height: 100%;
+}
+
+.ant-line {
+  margin: 4px 0;
+  color: #999;
+  display: inline-block;
+  height: 1px;
+  background: #ccc;
 }
 
 #react-content{
@@ -92,4 +104,21 @@
 #btnquery{
   position: absolute;
   right:  15px;
+}
+
+#planstep{
+
+}
+
+.btnDetail{
+  position: absolute;
+  font-size: 20px;
+  top:20px;
+  right: 20px;
+}
+
+#btnaddstep{
+  margin-top: -13px;
+  font-family: "微软雅黑";
+  margin-left: -40px;
 }
