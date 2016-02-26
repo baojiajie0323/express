@@ -100,10 +100,17 @@ module.exports = {
   queryAll: function (req, res, next) {
     console.log('queryAll');
     pool.getConnection(function(err, connection) {
-      connection.query($sql.queryAll, function(err, result) {
-        jsonWrite(res, result);
-        connection.release();
-      });
+      console.log(connection);
+      console.log(connection == undefined)
+      if(connection == undefined){
+        jsonWrite(res, undefined);
+        return;
+      }else{
+        connection.query($sql.queryAll, function(err, result) {
+          jsonWrite(res, result);
+          connection.release();
+        });
+      }
     });
   }
 
