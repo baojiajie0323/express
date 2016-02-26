@@ -6,7 +6,8 @@ var userDao = require('../dao/userDao');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   console.log(req.query.userid);
-  res.redirect('../plan/index.html');
+  
+  res.redirect('../plan/index.html?userid=' + req.query.userid);
 });
 
 
