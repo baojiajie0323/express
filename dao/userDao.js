@@ -6,15 +6,24 @@ var $sql = require('./userSqlMapping');
 // 使用连接池，提升性能
 var pool  = mysql.createPool($util.extend({},$conf.mysql));
 
+var dbcode = {
+  SUCCESS: 0,
+  CONNECT_ERROR:1,
+  PARAM_ERROR:2,
+  FAIL:3
+}
 // 向前台返回JSON方法的简单封装
-var jsonWrite = function (res, ret) {
-  if(typeof ret === 'undefined') {
-    res.json({
-      code:'1',
-      msg: '操作失败'
-    });
-  } else {
-    res.json(ret);
+var jsonWrite = function (res, ret ,code) {
+  if(code != dbcode.SUCCESS){
+    if(code == dbcode.CONNECT_ERROR){ res.json({code:code,msg:'数据库连接失败'}); }
+    else if(code == dbcode.PARAM_ERROR){ res.json({code:code,msg:'参数错误'}); }
+    else if(code == dbcode.FAIL){ res.json({code:code,msg:'操作失败'}); }
+  }else {
+    if(typeof ret === 'undefined'){
+      res.json({code:dbcode.FAIL,msg:'操作失败'});
+    }else{
+      res.json({code:0,data:ret});
+    }
   }
 };
 
@@ -111,6 +120,60 @@ module.exports = {
         });
       }
     });
-  }
+  },
+
+  insertgroup: function (req, res, next) {
+    var param = req.body;
+    if(param.name == null || param.groupid == null) {
+      jsonWrite(res, {}, dbcode.PARAM_ERROR);
+      return;
+    }
+
+    pool.getConnection(function(err, connection) {
+      if(connection == undefined){
+        jsonWrite(res, {} ,dbcode.CONNECT_ERROR);
+        return;
+      }else{
+        connection.query($sql.insertgroup, [param.name, param.groupid], function(err, result) {
+          if(result.affectedRows > 0) {
+            jsonWrite(res,result,dbcode.SUCCESS);
+          } else {
+            jsonWrite(res, {},dbcode.FAIL);
+          }
+          connection.release();
+        });
+      }
+    });
+  },
+
+  queryallgroup: function (req, res, next) {
+    console.log('queryallgroup');
+    pool.getConnection(function(err, connection) {
+      if(connection == undefined){
+        jsonWrite(res,{},dbcode.CONNECT_ERROR);
+        return;
+      }else{
+        connection.query($sql.queryallgroup, function(err, result) {
+          jsonWrite(res, result,dbcode.SUCCESS);
+          connection.release();
+        });
+      }
+    });
+  },
+
+  queryallplan: function (req, res, next) {
+    console.log('queryallplan');
+    pool.getConnection(function(err, connection) {
+      if(connection == undefined){
+        jsonWrite(res,{},dbcode.CONNECT_ERROR);
+        return;
+      }else{
+        connection.query($sql.queryallplan, function(err, result) {
+          jsonWrite(res, result,dbcode.SUCCESS);
+          connection.release();
+        });
+      }
+    });
+  },
 
 };
