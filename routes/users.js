@@ -17,7 +17,17 @@ router.post('/postCommand', function(req, res, next) {
   }else if(req.body.command == "getallplan"){
     console.log('getallplan');
     userDao.queryallplan(req, res, next);
+  }else if(req.body.command == "delplan"){
+    console.log('delplan');
+    userDao.delplan(req, res, next);
+  }else if(req.body.command == "addplan"){
+    console.log('addplan');
+    userDao.addplan(req, res, next);
+  }else if(req.body.command == "queryplan"){
+    console.log('queryplan');
+    userDao.queryplan(req, res, next);
   }
+
 });
 
 

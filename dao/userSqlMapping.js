@@ -11,7 +11,7 @@ var user = {
   insertplan: 'insert into emergency_plan(name,createtime,createuser,detail,groupid) values(?,?,?,?,?)',
   updateplan: 'update emergency_plan set name=?,detail=? where id = ?',
   deleteplan: 'delete from emergency_plan where id = ?',
-  queryallplan: 'select * from emergency_plan',
+  queryallplan: 'select a.*,b.name createusername from emergency_plan a INNER JOIN user b ON a.createuser = b.id',
 };
 
 module.exports = user;
