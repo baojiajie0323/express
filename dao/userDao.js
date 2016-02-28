@@ -111,6 +111,26 @@ module.exports = {
       }
     });
   },
+  queryplan:function (req, res, next) {
+
+    var param = req.body;
+    if(param.planid == null) {
+      jsonWrite(res, {}, dbcode.PARAM_ERROR);
+      return;
+    }
+
+    pool.getConnection(function(err, connection) {
+      if(connection == undefined){
+        jsonWrite(res,{},dbcode.CONNECT_ERROR);
+        return;
+      }else{
+        connection.query($sql.queryplan, [param.planid], function(err, result) {
+          jsonWrite(res, result,dbcode.SUCCESS);
+          connection.release();
+        });
+      }
+    });
+  },
   addplan: function (req, res, next) {
     var param = req.body;
     if(param.planname == null || param.plandetail == null ) {
@@ -123,7 +143,6 @@ module.exports = {
         jsonWrite(res, {} ,dbcode.CONNECT_ERROR);
         return;
       }else{
-        var nowtime = new date();
         connection.query($sql.insertplan, [param.planname,getNowFormatDate(),param.userid,param.plandetail,1], function(err, result) {
           if(result.affectedRows > 0) {
             jsonWrite(res,result,dbcode.SUCCESS);
